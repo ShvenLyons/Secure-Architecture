@@ -10,6 +10,12 @@
 > - 你提出的安全架构（包括轻量IDS与轻量加密）
 > - 实现方法和实验评估结果
 
+Unmanned Aerial Vehicles (UAVs) are increasingly deployed in various industrial and service applications. However, communication between drones and ground stations (D2G) is vulnerable due to protocol weaknesses. In particular, MAVLink, the widely utilized protocol for UAV control, is transmitted in plaintext with simple CRC validation mechanisms, which exposes drones to various threats such as man-in-the-middle (MITM) attacks, denial-of-service (DoS) attacks, replay attacks, and GPS spoofing.
+
+Intrusion detection systems (IDS) and communication encryption are effective mitigation. However, existing rule-based or flow-level methods are not suitable for D2G networks due to the delay limitation, heterogeneity and dynamism of the Internet of Things. Similarly, popular encryption algorithms are impractical for resource-constrained drones under the limitation of computational overhead.
+
+Based on these observations, we design a secure architecture for Drones that integrates two lightweight mitigation. Firstly, a packet-level IDS based on an embedder-classifier (EC) framework is proposed, which utilizes byte embeddings combined with a lightweight classifier for efficient detection. Secondly, the ASCON algorithm was used for data stream encryption, achieving secure MAVLink data transmission with minimal computational overhead. Both components are integrated into a proxy employed at the ground station to enhance security without introducing additional burdens to the Drone itself.
+
 ---
 
 # 1. Introduction

@@ -3,7 +3,6 @@
 **Secure Architecture for Drone: Lightweight Packet-level IDS and Communication Encryption for MAVLink Protocol**
 
 ---
-
 # Abstract
 
 > - 无人机在实际应用中面临的通信安全挑战
@@ -17,7 +16,6 @@ Intrusion detection systems (IDS) and communication encryption are effective mit
 Based on these observations, we design a secure architecture for Drones that integrates two lightweight mitigation. Firstly, a packet-level IDS based on an embedder-classifier (EC) framework is proposed, which utilizes byte embeddings combined with a lightweight classifier for efficient detection. Secondly, the ASCON algorithm was used for data stream encryption, achieving secure MAVLink data transmission with minimal computational overhead. Both components are integrated into a proxy employed at the ground station to enhance security without introducing additional burdens to the Drone itself.
 
 ---
-
 # 1. Introduction
 
 > - 背景介绍：无人机应用快速发展，但安全性薄弱
@@ -26,7 +24,6 @@ Based on these observations, we design a secure architecture for Drones that int
 > - 论文组织结构
 
 ---
-
 # 2. Background and Related Work
 
 ## 2.1 MAVLink Protocol Overview
@@ -46,8 +43,7 @@ Based on these observations, we design a secure architecture for Drones that int
 > 介绍轻量级加密（如Diffie-Hellman密钥交换、对称加密流）
 
 ---
-
-# 3. System Architecture Design
+# 3. Architecture Design
 
 ## 3.1 Overall System Architecture
 
@@ -83,49 +79,48 @@ Based on these observations, we design a secure architecture for Drones that int
 > 攻击实施时间、持续时间、实验观测点等设计说明
 
 ---
+# 4. Implementation
 
-# 4. Packet-Level Intrusion Detection System Design
+## 4.1. ECIDS
 
-## 4.1 Data Collection and Feature Extraction
+### 4.1.1 Data Collection and Feature Extraction
 
-> - 攻击流量采集过程
+> - 攻击模拟流量采集过程
 > - 数据结构说明（如payload_hex、mav_payload）
-> - 特征提取方式（如payload embedding）
+> - IDS模块说明（embedder + classifier）
 
-## 4.2 EC Framework Design (Embedding + Classifier)
+### 4.1.2 EC Framework Design (Embedding + Classifier)
 
 > - 嵌入层设计 (Word2Vec嵌入向量)
 > - 分类器选择 (轻量MLP / RF / DT均可)
 > - 模型训练流程（不展开SFT等研究性训练）
 
-## 4.3 Evaluation of IDS Performance
+### 4.1.3 Experiment
 
 > - 实验设置
 > - 使用指标（Accuracy, F1-score, AUC, Processing Time）
 > - 结果与分析
 
----
+## 4.2. Lightweight Encryption
 
-# 5. Lightweight Encryption Module Design
-
-## 5.1 Diffie-Hellman Based Key Exchange
+### 4.2.1 Diffie-Hellman Based Key Exchange
 
 > 描述密钥协商过程
 
-## 5.2 Communication Encryption Scheme
+### 4.2.2 Communication Encryption Scheme
 
 > - 明文MAVLink数据流的加密封装
 > - 加密算法选型（轻量对称加密，如AES-CTR，ascon）
 > - 加密封装与解封装逻辑
 
-## 5.3 Encryption Module Evaluation
+### 4.2.3 Experiment
 
 > - 加密带来的延迟开销分析
 > - 对数据完整性、兼容性的影响分析
 
 ---
 
-# 6. Integrated System Evaluation
+# 5. Integrated System Evaluation
 
 > - 将IDS与加密模块整合后，进行综合测试
 > - 真实环境下测试结果汇总
@@ -133,7 +128,7 @@ Based on these observations, we design a secure architecture for Drones that int
 
 ---
 
-# 7. Conclusion
+# 6. Conclusion
 
 > 总结项目工作：
 > - 提出了完整的无人机安全架构

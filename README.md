@@ -34,6 +34,8 @@ A lightweight proxy for benchmarking encryption/decryption algorithms by measuri
 ## 📂 ECIDS
 Framework for packet-level intrusion detection (IDS), with two classifier head implementations based on Word2Vec embeddings.
 
+![D2G communication](./figure/EC.png)
+
 - **./ECIDS/word2vec_MLP.py**  
   ECIDS variant using MLP as the classifier head. Allows gradient-based feedback and has room for further improvements.
 

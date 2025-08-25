@@ -2,8 +2,6 @@
 
 **Secure Architecture for Drone: Packet-level IDS and Lightweight Channel Encryption**
 
-# Abstract
-
 This repository contains several modules for exploring vulnerabilities in the MAVLink protocol, cryptographic efficiency, and intrusion detection at the packet level. 
 
 Do not use the provided code in any real-world environment without proper authorization.

@@ -4,6 +4,8 @@
 
 This repository contains several modules for exploring vulnerabilities in the MAVLink protocol, cryptographic efficiency, and intrusion detection at the packet level. 
 
+![D2G communication](./figure/D2G.png)
+
 Do not use the provided code in any real-world environment without proper authorization.
 
 ---
@@ -41,3 +43,5 @@ Framework for packet-level intrusion detection (IDS), with two classifier head i
 ## 📂 Attack
 Contains various UAV attack simulation codes.  
 Details are not included here for security considerations.
+
+![D2G communication](./figure/Attacks.png)

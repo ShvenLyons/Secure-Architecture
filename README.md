@@ -2,15 +2,12 @@
 
 **Secure Architecture for Drone: Packet-level IDS and Lightweight Channel Encryption**
 
----
-
-## ！！！ Disclaimer ！！！
-Do not use the provided code in any real-world environment without proper authorization.
-
----
 # Abstract
 
 This repository contains several modules for exploring vulnerabilities in the MAVLink protocol, cryptographic efficiency, and intrusion detection at the packet level. It also includes UAV attack simulation code.
+
+## ！！！ Disclaimer ！！！
+Do not use the provided code in any real-world environment without proper authorization.
 
 ---
 
@@ -22,8 +19,6 @@ Code for validating the vulnerability of MAVLink’s CRC checksum mechanism and 
 
 - **./CRC/Verify.py**  
   Verify the vulnerability by checking CRC correctness using known `crc_extra` together with header and payload.
-
----
 
 ## 📂 Cipher
 A lightweight proxy for benchmarking encryption/decryption algorithms by measuring latency and efficiency.
@@ -37,8 +32,6 @@ A lightweight proxy for benchmarking encryption/decryption algorithms by measuri
 - **./Cipher/...**  
   Remaining code implementing specific cipher algorithms.
 
----
-
 ## 📂 ECIDS
 Framework for packet-level intrusion detection (IDS), with two classifier head implementations based on Word2Vec embeddings.
 
@@ -47,8 +40,6 @@ Framework for packet-level intrusion detection (IDS), with two classifier head i
 
 - **./ECIDS/word2vec_RF.py**  
   ECIDS variant using Random Forest as the classifier head. Achieves the best performance among lightweight classifier comparisons.
-
----
 
 ## 📂 Attack
 Contains various UAV attack simulation codes.  

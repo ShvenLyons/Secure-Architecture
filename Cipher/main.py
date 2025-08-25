@@ -9,34 +9,34 @@ from encrypt_utils import *
 class PlaintextEncryptDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("明文加解密窗口")
+        self.setWindowTitle("Encryption and Decryption Window")
         layout = QVBoxLayout()
         self.input_edit = QTextEdit()
-        self.input_edit.setPlaceholderText("输入明文...")
-        layout.addWidget(QLabel("明文输入"))
+        self.input_edit.setPlaceholderText("Input Plaintext...")
+        layout.addWidget(QLabel("Plaintext Accept"))
         layout.addWidget(self.input_edit)
 
         self.key_edit = QLineEdit()
-        self.key_edit.setPlaceholderText("手动输入密钥（hex）或留空随机")
-        layout.addWidget(QLabel("密钥（可选，hex格式）"))
+        self.key_edit.setPlaceholderText("Manually enter the key (hex) or Randomly")
+        layout.addWidget(QLabel("Key (hex)）"))
         layout.addWidget(self.key_edit)
 
         self.algo_combo = QComboBox()
         self.algo_combo.addItems([
             "AES-128-GCM", "AES-128-CTR", "ChaCha20", "ASCON-128", "XTEA-OFB",
-            "DMAV(XOR)", "Navid(XOR)", "ARC4(Rabbit模拟)", "Speck-CTR"
+            "DMAV", "Navid", "ARC4", "Speck-CTR"
         ])
-        layout.addWidget(QLabel("选择加密算法"))
+        layout.addWidget(QLabel("Choose Cipher"))
         layout.addWidget(self.algo_combo)
 
         btns = QHBoxLayout()
-        self.encrypt_btn = QPushButton("加密")
+        self.encrypt_btn = QPushButton("To Encrypt")
         btns.addWidget(self.encrypt_btn)
         layout.addLayout(btns)
 
         self.output_edit = QTextEdit()
         self.output_edit.setReadOnly(True)
-        layout.addWidget(QLabel("输出（密文/明文）"))
+        layout.addWidget(QLabel("Output"))
         layout.addWidget(self.output_edit)
 
         self.setLayout(layout)
@@ -47,7 +47,7 @@ class PlaintextEncryptDialog(QDialog):
         algo = self.algo_combo.currentText()
         text = self.input_edit.toPlainText().strip()
         if not text:
-            QMessageBox.warning(self, "错误", "明文不能为空！")
+            QMessageBox.warning(self, "WRONG", "Empty Plaintext！")
             return
         key_hex = self.key_edit.text().strip()
         import os
@@ -61,7 +61,7 @@ class PlaintextEncryptDialog(QDialog):
             key_len = 16
         key = bytes.fromhex(key_hex) if key_hex else (os.urandom(key_len) if algo == "ASCON-128" else get_random_bytes(key_len))
         if key_hex and len(key) != key_len:
-            QMessageBox.warning(self, "错误", f"密钥长度必须为{key_len*2}位hex字符串！")
+            QMessageBox.warning(self, "WRONG", f"Length of Key MUST BE {key_len*2} bites hex string！")
             return
 
         try:
@@ -103,39 +103,39 @@ class PlaintextEncryptDialog(QDialog):
                 key2, iv, ct, orig_len = cipher_data[0]
                 self.output_edit.setPlainText(f"KEY:{key2.hex()}\nIV:{iv.hex()}\nCT:{ct.hex()}")
         except Exception as e:
-            QMessageBox.warning(self, "加密失败", str(e))
+            QMessageBox.warning(self, "FAIL", str(e))
 
 class CryptoGUI(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('加密算法对比实验平台')
+        self.setWindowTitle('Cipher Comparison Proxy')
         self.setGeometry(200, 200, 540, 400)
         layout = QVBoxLayout()
-        self.info_label = QLabel("请选择加密算法和操作，然后点击执行。日志会自动写入./log/")
+        self.info_label = QLabel("Choose Cipher, Choose Operation，Press "GO"。Log file will write in ./log/")
         layout.addWidget(self.info_label)
 
         self.combo = QComboBox()
         self.combo.addItems([
             "AES-128-GCM", "AES-128-CTR", "ChaCha20", "ASCON-128", "XTEA-OFB",
-            "DMAV(XOR)", "Navid(XOR)", "ARC4(Rabbit模拟)", "Speck-CTR"
+            "DMAV", "Navid", "ARC4", "Speck-CTR"
         ])
         layout.addWidget(self.combo)
 
         btn_layout = QHBoxLayout()
-        self.encrypt_btn = QPushButton('加密')
-        self.decrypt_btn = QPushButton('解密')
-        self.onekey_btn = QPushButton('一键加解密')
+        self.encrypt_btn = QPushButton('Encrypt')
+        self.decrypt_btn = QPushButton('Decrypt')
+        self.onekey_btn = QPushButton('Encrypt & Decrypt')
         btn_layout.addWidget(self.encrypt_btn)
         btn_layout.addWidget(self.decrypt_btn)
         btn_layout.addWidget(self.onekey_btn)
         layout.addLayout(btn_layout)
 
         # 保存密文密钥选项
-        self.save_cipher_checkbox = QCheckBox("加密时保存密文和密钥到文件")
+        self.save_cipher_checkbox = QCheckBox("Save encrypted messages and keys in File")
         self.save_cipher_checkbox.setChecked(False)
         layout.addWidget(self.save_cipher_checkbox)
 
-        self.open_plain_window_btn = QPushButton('明文加解密窗口')
+        self.open_plain_window_btn = QPushButton('Encryption and Decryption Window')
         layout.addWidget(self.open_plain_window_btn)
         self.open_plain_window_btn.clicked.connect(self.open_plain_window)
 
@@ -180,7 +180,7 @@ class CryptoGUI(QWidget):
 
     def encrypt_clicked(self):
         algo = self.combo.currentText()
-        self.log_area.append(f'开始加密（算法：{algo}）...')
+        self.log_area.append(f'Start Encrypt（Cipher：{algo}）...')
         key, cipher_data = None, None
         cipherfile = self.cipherfile_paths.get(algo, None) if self.save_cipher_checkbox.isChecked() else None
         keyfile = self.keyfile_paths.get(algo, None) if self.save_cipher_checkbox.isChecked() else None
@@ -188,45 +188,45 @@ class CryptoGUI(QWidget):
             key, cipher_data = self._do_encrypt(algo, cipherfile, keyfile)
             self.last_cipher_data = cipher_data
             self.last_key = key
-            self.log_area.append("加密完成，日志已写入 ./log/")
+            self.log_area.append("Encryption Finish，LOG FILE in ./log/")
             if self.save_cipher_checkbox.isChecked():
-                self.log_area.append(f"密文和密钥已写入文件：\n{cipherfile}\n{keyfile}")
+                self.log_area.append(f"Message and KEY are in：\n{cipherfile}\n{keyfile}")
         except Exception as e:
-            self.log_area.append(f"加密失败: {e}")
+            self.log_area.append(f"FAIL: {e}")
 
     def decrypt_clicked(self):
         algo = self.combo.currentText()
-        self.log_area.append(f'开始解密（算法：{algo}）...')
+        self.log_area.append(f'Start Decrypt（Cipher：{algo}）...')
         try:
             if self.last_cipher_data is None:
-                self.log_area.append("请先执行加密，或载入密文数据。")
+                self.log_area.append("Encrypt First or Move encrypted message in")
                 return
             self._do_decrypt(algo, self.last_cipher_data, self.last_key)
-            self.log_area.append("解密完成，日志已写入 ./log/")
+            self.log_area.append("Decryption Finish，LOG FILE in ./log/")
         except Exception as e:
-            self.log_area.append(f"解密失败: {e}")
+            self.log_area.append(f"FAIL: {e}")
 
     def onekey_clicked(self):
-        self.log_area.append('开始一键加解密测试...')
+        self.log_area.append('Start Encrypt and Decrypt...')
         algos = [
             "AES-128-GCM", "AES-128-CTR", "ChaCha20", "ASCON-128", "XTEA-OFB",
-            "DMAV(XOR)", "Navid(XOR)", "ARC4(Rabbit模拟)", "Speck-CTR"
+            "DMAV", "Navid", "ARC4", "Speck-CTR"
         ]
         for algo in algos:
-            self.log_area.append(f'[{algo}] 加密...')
+            self.log_area.append(f'[{algo}] encrypting...')
             cipherfile = self.cipherfile_paths.get(algo, None) if self.save_cipher_checkbox.isChecked() else None
             keyfile = self.keyfile_paths.get(algo, None) if self.save_cipher_checkbox.isChecked() else None
             try:
                 key, cipher_data = self._do_encrypt(algo, cipherfile, keyfile)
-                self.log_area.append(f'[{algo}] 加密完成')
+                self.log_area.append(f'[{algo}] encryption finish')
                 if self.save_cipher_checkbox.isChecked():
-                    self.log_area.append(f'[{algo}] 密文和密钥已写入文件：\n{cipherfile}\n{keyfile}')
-                self.log_area.append(f'[{algo}] 解密...')
+                    self.log_area.append(f'[{algo}] message and KEY in：\n{cipherfile}\n{keyfile}')
+                self.log_area.append(f'[{algo}] decrypting...')
                 self._do_decrypt(algo, cipher_data, key)
-                self.log_area.append(f'[{algo}] 解密完成')
+                self.log_area.append(f'[{algo}] decryption finish')
             except Exception as e:
-                self.log_area.append(f'[{algo}] 失败: {e}')
-        self.log_area.append('一键加解密测试完成，所有日志均已写入 ./log/Record.txt')
+                self.log_area.append(f'[{algo}] FAIL: {e}')
+        self.log_area.append('FINISH ALL, LOG FILE IN ./log/Record.txt')
 
     def _do_encrypt(self, algo, cipherfile=None, keyfile=None):
         import os
@@ -252,13 +252,13 @@ class CryptoGUI(QWidget):
         elif algo == "XTEA-OFB":
             cipher_data = xtea_ofb_encrypt(self.flows, logfile='./log/Record.txt',
                                            cipherfile=cipherfile, keyfile=keyfile, labels=labels)
-        elif algo == "DMAV(XOR)":
+        elif algo == "DMAV":
             cipher_data = dmav_xor_encrypt(self.flows, logfile='./log/Record.txt',
                                            cipherfile=cipherfile, keyfile=keyfile, labels=labels)
-        elif algo == "Navid(XOR)":
+        elif algo == "Navid":
             cipher_data = navid_encrypt(self.flows, logfile='./log/Record.txt',
                                         cipherfile=cipherfile, keyfile=keyfile, labels=labels)
-        elif algo == "ARC4(Rabbit模拟)":
+        elif algo == "ARC4":
             cipher_data = arc4_encrypt(self.flows, logfile='./log/Record.txt',
                                        cipherfile=cipherfile, keyfile=keyfile, labels=labels)
         elif algo == "Speck-CTR":
@@ -277,11 +277,11 @@ class CryptoGUI(QWidget):
             ascon_decrypt(cipher_data, key, logfile='./log/Record.txt')
         elif algo == "XTEA-OFB":
             xtea_ofb_decrypt(cipher_data, logfile='./log/Record.txt')
-        elif algo == "DMAV(XOR)":
+        elif algo == "DMAV":
             dmav_xor_decrypt(cipher_data, logfile='./log/Record.txt')
-        elif algo == "Navid(XOR)":
+        elif algo == "Navid)":
             navid_decrypt(cipher_data, logfile='./log/Record.txt')
-        elif algo == "ARC4(Rabbit模拟)":
+        elif algo == "ARC4)":
             arc4_decrypt(cipher_data, logfile='./log/Record.txt')
         elif algo == "Speck-CTR":
             speck_ctr_decrypt(cipher_data, logfile='./log/Record.txt')
@@ -295,3 +295,4 @@ if __name__ == '__main__':
     window = CryptoGUI()
     window.show()
     sys.exit(app.exec_())
+

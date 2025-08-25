@@ -4,9 +4,8 @@
 
 # Abstract
 
-This repository contains several modules for exploring vulnerabilities in the MAVLink protocol, cryptographic efficiency, and intrusion detection at the packet level. It also includes UAV attack simulation code.
+This repository contains several modules for exploring vulnerabilities in the MAVLink protocol, cryptographic efficiency, and intrusion detection at the packet level. 
 
-## ！！！ Disclaimer ！！！
 Do not use the provided code in any real-world environment without proper authorization.
 
 ---

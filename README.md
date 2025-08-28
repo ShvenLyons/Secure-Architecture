@@ -34,6 +34,12 @@ python Downloadata.py -o ./data_all
 ```bash
 python Downloadata.py -o ./data_subset --only CIC UNSW MAVLink attack_records.csv *.pcapng
 ```
+`--only` accepts multiple arguments
+Wildcards (`*`, `?`) are supported
+Examples:
+`CIC` → download only the CIC folder
+`*.pcapng` → download all .pcapng files
+`attack_records.csv` → download only the CSV file
 
 ---
 

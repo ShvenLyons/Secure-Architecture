@@ -22,17 +22,17 @@ This script downloads datasets via URL link from the Google Drive folder
 
 ### Download all contents into `./dataset`:
 ```bash
-python DownloadData.py
+python Downloadata.py
 ```
 
 ### Download all contents into a custom directory:
 ```bash
-python DownloadData.py -o ./data_all
+python Downloadata.py -o ./data_all
 ```
 
 ### Download only specific files or folders:
 ```bash
-python DownloadData.py -o ./data_subset --only CIC UNSW MAVLink attack_records.csv *.pcapng
+python Downloadata.py -o ./data_subset --only CIC UNSW MAVLink attack_records.csv *.pcapng
 ```
 
 ---

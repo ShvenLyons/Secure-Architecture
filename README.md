@@ -50,7 +50,7 @@ Details are not included here for security considerations.
 
 ---
 
-# DownloadData.py — Usage Guide
+# Downloadata.py — Usage Guide
 
 This script downloads datasets via URL link from the Google Drive folder
 
